@@ -63,6 +63,7 @@ if validate_args():
                     
                 full_file = "{0}/{1}".format(dirpath, image_name)
                 move_file(dirpath, image_name, file_counter, file_extension, output_dir)
+                file_counter += 1
             
             print ""
 
