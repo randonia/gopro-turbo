@@ -38,6 +38,8 @@ def move_file(in_dir, in_name, out_name, out_ext, out_dir):
     dest_file =  '{0}/{1}.{2}'.format(out_dir, str(out_name).zfill(8), out_ext)
     shutil.copy(src_file, dest_file)
 
+# How many columns to print '.' 
+STDOUT_COLS = 72
 
 # TODO: Use some sort of detection for GoPro naming conventions
 # http://gopro.com/support/articles/hero3-and-hero3-file-naming-convention
@@ -51,10 +53,15 @@ if validate_args():
     for dirpath, dirnames, filenames in os_walk:
         if "GOPRO" in dirpath:
             print "Operating in folder: ", dirpath
-            print "Found {0} images".format(len(filenames))
-            for image_name in  sorted(filenames):
+            num_files = len(filenames)
+            col_width = max(1,min(STDOUT_COLS,num_files))
+            print "Found {0} images".format(num_files)
+            for num, image_name in  enumerate(sorted(filenames)):
+                if num % (num_files / col_width) == 0:
+                    sys.stdout.write('.')
+                    sys.stdout.flush()
+                    
                 full_file = "{0}/{1}".format(dirpath, image_name)
                 move_file(dirpath, image_name, file_counter, file_extension, output_dir)
-                file_counter += 1
 
 print "Done"
