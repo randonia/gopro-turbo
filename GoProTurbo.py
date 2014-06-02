@@ -51,6 +51,9 @@ if validate_args():
     file_extension = "JPG"
     
     for dirpath, dirnames, filenames in os_walk:
+        # So each folder operates in order, do this first
+        # since walk starts on .
+        dirnames.sort()
         if "GOPRO" in dirpath:
             print "Operating in folder: ", dirpath
             num_files = len(filenames)
@@ -60,7 +63,9 @@ if validate_args():
                 if num % (num_files / col_width) == 0:
                     sys.stdout.write('.')
                     sys.stdout.flush()
-                    
+                if len(image_name) != 12 and image_name[-3] != file_extension:
+                    print "Skipping ", image_name
+                    continue
                 full_file = "{0}/{1}".format(dirpath, image_name)
                 move_file(dirpath, image_name, file_counter, file_extension, output_dir)
                 file_counter += 1
